@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <title>Sockets</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            
+            $("#btn").click(function () {
+                var name = $('#name').val();
+                var loc = $('#loc').val();
+                var lan = $('#lan').val();
+                var comment = $('#comment').val();
+                
+                
+                var socket = io(); //1
+                $("#output").empty();
+                $("#output1").empty();
+
+                socket.on('greeting', function (data) { //4
+                    console.log(data.msg); //5
+                    socket.emit('thankyou', { 
+                        names: name,
+                        locs: loc,
+                        lans: lan,
+                        comments:comment
+                     }); //6
+                });
+
+
+                socket.on("fromBack" ,function(data){
+                    // console.log(data.name);
+                    $("#output").append(` name: ${data.name} location:${data.loc} programing lang: ${data.lan}  comment:${data.comment}`)
+                    $("#output1").append(`  your lacky number is ${data.rand}`);
+                });
+            });
+            
+
+        })
+
+    </script>
+</head>
+
+<body>
+    <div id="output"></div>
+    <div id="output1"></div>
+    <label>Your Name</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <label> Dojo Location</label>
+    <select name="loc" id="loc">
+        <option value="Riyadh">Riyadh</option>
+        <option value="Jeddah">Jeddah</option>
+    </select>
+    <br>
+    <label>Fav Lang</label>
+    <select name="lan" id="lan">
+        <option value="JavaScript">JavaScript</option>
+        <option value="Python">Python</option>
+    </select>
+    <br>
+    <label>Comment (optional): </label>
+    <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+    <button type="button" id="btn"> Send</button>
+</body>
+
+</html>
